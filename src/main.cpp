@@ -5,18 +5,17 @@
 // For installation, upgrading, documentations, and tutorials, check out our website!
 // https://ez-robotics.github.io/EZ-Template/
 /////
-
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
     {1, 2, 3 },  // Left Chassis Ports (negative port will reverse it!)
     {11, 12, 13 },  // Right Chassis Ports (negative port will reverse it!)
 
-    21,     // IMU Port
+    4 ,     // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450);   // Wheel RPM
 
-/**
+/**         
  * Runs initialization code. This occurs as soon as the program is started.
  *
  * All other competition modes are blocked by initialize; it is recommended
