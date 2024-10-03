@@ -26,7 +26,7 @@ void initialize() {
   ez::ez_template_print();
 
   pros::delay(500);  // Stop the user from doing anything while legacy ports configure
-
+  chassis.opcontrol_drive_activebrake_set(2.0);
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);  // Enables modifying the controller curve with buttons on the joysticks
   chassis.opcontrol_drive_activebrake_set(0);    // Sets the active brake kP. We recommend ~2.  0 will disable.
@@ -147,7 +147,24 @@ void opcontrol() {
     // . . .
     // Put more user control code here!
     // . . .
-
+    if (master.get_digital(DIGITAL_L1)) {
+  intake.move(127);
+} 
+else if (master.get_digital(DIGITAL_L2)) {
+  intake.move(-127);
+} 
+else {
+  intake.move(0);
+}
+if (master.get_digital(DIGITAL_R1)) {
+  intake2.move(127);
+} 
+else if (master.get_digital(DIGITAL_R2)) {
+  intake2.move(-127);
+} 
+else {
+  intake2.move(0);
+}
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }
