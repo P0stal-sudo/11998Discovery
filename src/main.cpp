@@ -20,7 +20,7 @@ ez::Drive chassis(
  *
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
- */
+ /*
 void initialize() {
   // Print our branding over your terminal :D
   ez::ez_template_print();
@@ -111,7 +111,14 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+ez::Piston left_wing('A');
 void opcontrol() {
+  while (true) {
+    left_wing.buttons(master.get_digital(DIGITAL_L1), master.get_digital(DIGITAL_L2));
+
+    pros::delay(10);
+  }
+}
   // This is preference to what you like to drive on
   pros::motor_brake_mode_e_t driver_preference_brake = MOTOR_BRAKE_COAST;
 
@@ -137,8 +144,8 @@ void opcontrol() {
       chassis.pid_tuner_iterate();  // Allow PID Tuner to iterate
     }
 
-    // chassis.opcontrol_tank();  // Tank control
-    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    chassis.opcontrol_tank();  // Tank control
+    // chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
@@ -146,24 +153,20 @@ void opcontrol() {
     // . . .
     // Put more user control code here!
     // . . .
+
     if (master.get_digital(DIGITAL_L1)) {
-  intake.move(127);
-} 
-else if (master.get_digital(DIGITAL_L2)) {
-  intake.move(-127);
-} 
-else {
-  intake.move(0);
-}
-if (master.get_digital(DIGITAL_R1)) {
-  intake2.move(127);
-} 
-else if (master.get_digital(DIGITAL_R2)) {
-  intake2.move(-127);
-} 
-else {
-  intake2.move(0);
-}
+      intake.move(127);
+    } 
+    else if (master.get_digital(DIGITAL_L2)) {
+      intake.move(-127);
+    } 
+    else {
+      intake.move(0);
+    }
+    while (true) {
+      left_wing.buttons(master.get_digital(DIGITAL_R1), master.get_digital(DIGITAL_R2));
+      pros::delay(10);
+    }
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }
