@@ -157,8 +157,17 @@ void opcontrol() {
     else {
       intake.move(0);
     }
+    if (master.get_digital(DIGITAL_R1)) {
+      intake2.move(127)
+    }
+    else if (master.get_digital(DIGITAL_R2)) {
+      intake2.move(-127)
+    }
+    else {
+      intake2.move(0)
+    }
+    left_wing.button_toggle(master.get_digital(DIGITAL_A));
 
-    left_wing.buttons(master.get_digital(DIGITAL_L1), master.get_digital(DIGITAL_L2));
     pros::delay(10);
 
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
