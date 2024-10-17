@@ -9,8 +9,8 @@ ez::Piston left_wing('A', 1);
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {14, 15, -16 },  // Left Chassis Ports (negative port will reverse it!)
-    {4, 5, -6 },  // Right Chassis Ports (negative port will reverse it!)
+    {14, 15, 16 },  // Left Chassis Ports (negative port will reverse it!)
+    {-4, -5, -6 },  // Right Chassis Ports (negative port will reverse it!)
 
     20 ,     // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
@@ -138,8 +138,8 @@ void opcontrol() {
       chassis.pid_tuner_iterate();  // Allow PID Tuner to iterate
     }
 
-    chassis.opcontrol_tank();  // Tank control
-    // chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    // chassis.opcontrol_tank();  // Tank control
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
