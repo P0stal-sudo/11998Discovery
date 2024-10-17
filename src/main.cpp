@@ -5,22 +5,22 @@
 // For installation, upgrading, documentations, and tutorials, check out our website!
 // https://ez-robotics.github.io/EZ-Template/
 /////
+ez::Piston left_wing('A', 1);
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {1, 2, 3 },  // Left Chassis Ports (negative port will reverse it!)
-    {11, 12, 13 },  // Right Chassis Ports (negative port will reverse it!)
+    {4, 5, -6 },  // Left Chassis Ports (negative port will reverse it!)
+    {14, 15, -16 },  // Right Chassis Ports (negative port will reverse it!)
 
-    4 ,     // IMU Port
+    1 ,     // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450);   // Wheel RPM
-
-/**         
+  /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
- /*
+ */
 void initialize() {
   // Print our branding over your terminal :D
   ez::ez_template_print();
@@ -111,14 +111,8 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-ez::Piston left_wing('A');
-void opcontrol() {
-  while (true) {
-    left_wing.buttons(master.get_digital(DIGITAL_L1), master.get_digital(DIGITAL_L2));
 
-    pros::delay(10);
-  }
-}
+void opcontrol() {
   // This is preference to what you like to drive on
   pros::motor_brake_mode_e_t driver_preference_brake = MOTOR_BRAKE_COAST;
 
@@ -163,10 +157,10 @@ void opcontrol() {
     else {
       intake.move(0);
     }
-    while (true) {
-      left_wing.buttons(master.get_digital(DIGITAL_R1), master.get_digital(DIGITAL_R2));
-      pros::delay(10);
-    }
+
+    left_wing.buttons(master.get_digital(DIGITAL_L1), master.get_digital(DIGITAL_L2));
+    pros::delay(10);
+
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }
