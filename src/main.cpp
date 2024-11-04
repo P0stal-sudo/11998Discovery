@@ -40,7 +40,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      
+      Auton("Highstakes autonomous\nStarting Position: intake down and clamp down", Highstakes),
   });
 
   // Initialize chassis and auton selector
@@ -142,10 +142,10 @@ void opcontrol() {
     // . . .
 
     if (master.get_digital(DIGITAL_L1)) {
-      intake.move(127);
+      intake.move(100);
     } 
     else if (master.get_digital(DIGITAL_L2)) {
-      intake.move(-127);
+      intake.move(-100);
     } 
     else {
       intake.move(0);
