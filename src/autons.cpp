@@ -34,5 +34,5 @@ void default_constants() {
 //highstakes autonomous routine
 
 void highstakes() {
-
+  
 }

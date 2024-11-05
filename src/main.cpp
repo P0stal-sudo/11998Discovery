@@ -10,7 +10,7 @@ ez::Piston left_wing('A');
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
     {-14, -15, -16 },  // Left Chassis Ports (negative port will reverse it!)
-    {4, 5, 6 },  // Right Chassis Ports (negative port will reverse it!)
+    {4, 5, 18 },  // Right Chassis Ports (negative port will reverse it!)
 
     20 ,     // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
@@ -40,7 +40,7 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      Auton("Highstakes autonomous\nStarting Position: intake down and clamp down", Highstakes),
+      Auton("Highstakes autonomous\nStarting Position: intake down and clamp down", highstakes),
   });
 
   // Initialize chassis and auton selector
@@ -142,10 +142,10 @@ void opcontrol() {
     // . . .
 
     if (master.get_digital(DIGITAL_L1)) {
-      intake.move(100);
+      intake.move(110);
     } 
     else if (master.get_digital(DIGITAL_L2)) {
-      intake.move(-100);
+      intake.move(-110);
     } 
     else {
       intake.move(0);
