@@ -1,3 +1,4 @@
+#include "helpers.hpp"
 #include "main.h"
 
 /////
@@ -5,7 +6,6 @@
 // For installation, upgrading, documentations, and tutorials, check out our website!
 // https://ez-robotics.github.io/EZ-Template/
 /////
-ez::Piston left_wing('A');
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
@@ -40,7 +40,21 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      Auton("Highstakes autonomous\nStarting Position: intake down and clamp down", highstakes),
+      Auton("Highstakes autonomous blue left\nStarting Position: ", highstakes_blue_left),
+      Auton("Highstakes autonomous blue right\nStarting Position: ", highstakes_blue_right),
+      Auton("Highstakes autonomous red left\nStarting Position: ", highstakes_red_left),
+      Auton("Highstakes autonomous red right\nStarting Position: ", highstakes_red_right),
+      Auton("Highstakes autonomous skills", skills),
+      /*
+      Auton("drive 48", drive_48),
+      Auton("drive 96", drive_96),
+      Auton("drive back 48", driveBack_48),
+      Auton("drive back 96", driveBack_96),
+      Auton("turn 90", turn_90),
+      Auton("turn 180", turn_180),
+      Auton("turn 360", turn_360),
+      Auton("turn back", turnBack),
+      */
   });
 
   // Initialize chassis and auton selector
@@ -159,7 +173,7 @@ void opcontrol() {
     else {
       intake2.move(0);
     }
-    left_wing.button_toggle(master.get_digital(DIGITAL_A));
+    mogo.button_toggle(master.get_digital(DIGITAL_A));
 
     pros::delay(10);
 

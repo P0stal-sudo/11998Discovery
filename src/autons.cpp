@@ -1,10 +1,15 @@
-
+#include "autons.hpp"
+#include <cmath>
+#include "EZ-Template/drive/drive.hpp"
+#include "EZ-Template/util.hpp"
+#include "helpers.hpp"
 #include "main.h"
-
+#include "subsystems.hpp"
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
 // https://ez-robotics.github.io/EZ-Template/
 /////
+
 
 // These are out of 127
 const int DRIVE_SPEED = 110;
@@ -14,6 +19,7 @@ const int SWING_SPEED = 90;
 ///
 // Constants
 ///
+
 void default_constants() {
   chassis.pid_heading_constants_set(11, 0, 20);
   chassis.pid_drive_constants_set(20, 0, 100);
@@ -31,8 +37,191 @@ void default_constants() {
   chassis.slew_drive_constants_set(7_in, 80);
 }
 
-//highstakes autonomous routine
+//highstakes autonomous routines
 
-void highstakes() {
+void highstakes_blue_left() {
+  mogo.set(false);
+  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  mogo.set(true);
+
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  intake.move(-127);
+  chassis.pid_drive_set(36_in, DRIVE_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  intake.move(0);
+}
+
+void highstakes_blue_right() {
+  mogo.set(false);
+  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  mogo.set(true);
+
+  chassis.pid_wait();
+  mogo.set(true);
+
+  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  intake.move(-127);
+  chassis.pid_drive_set(36_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(-68_deg, TURN_SPEED);
+  chassis.pid_wait();
   
+  chassis.pid_drive_set(12_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  intake.move(0); 
+}
+
+void highstakes_red_left() {
+  mogo.set(false);
+  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  mogo.set(true);
+
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  intake.move(-127);
+  chassis.pid_drive_set(36_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(68_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(12_in, DRIVE_SPEED);
+  chassis.pid_wait();
+  intake.move(0);
+}
+
+void highstakes_red_right() {
+  mogo.set(false);
+  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  mogo.set(true);
+
+  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  intake.move(-127);
+  chassis.pid_drive_set(36_in, DRIVE_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  intake.move(0);
+}
+
+//skills auton
+
+void skills() {
+  mogo.set(false);
+  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  mogo.set(true);
+
+  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  intake.move(-127);
+  chassis.pid_drive_set(48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-24_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(-90_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(24_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-18_in, DRIVE_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(45_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(34_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(-6_in, DRIVE_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(90_deg, DRIVE_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(36_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  
+  chassis.pid_turn_set(-80_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  chassis.pid_drive_set(84_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait();
+
+  mogo.set(false);
+}
+
+//tuner autons
+void drive_48(){
+  chassis.pid_drive_set(48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+}
+void drive_96(){
+  chassis.pid_drive_set(96_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+}
+void driveBack_48(){
+  chassis.pid_drive_set(48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-48_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+}
+void driveBack_96(){
+  chassis.pid_drive_set(96_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  chassis.pid_drive_set(-96_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+}
+void turn_90(){
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  chassis.pid_wait();
+}
+void turn_180(){
+  chassis.pid_turn_set(180_deg, TURN_SPEED);
+  chassis.pid_wait();
+}
+void turn_360(){
+  chassis.pid_turn_set(360_deg, TURN_SPEED);
+  chassis.pid_wait();
+}
+void turnBack(){
+  chassis.pid_turn_set(360_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait();
 }
