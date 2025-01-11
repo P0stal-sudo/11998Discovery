@@ -1,4 +1,9 @@
 #include "main.h"
+#include <iterator>
+#include "pneumatics.hpp"
+#include "pros/misc.h"
+#include "subsystems.hpp"
+#include "lift.cpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
@@ -8,12 +13,12 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {-5, -6, -7, -8},  // Left Chassis Ports (negative port will reverse it!)
-    {11, 15, 16, 17},  // Right Chassis Ports (negative port will reverse it!)
+    {18,-19,-20},  // Left Chassis Ports (negative port will reverse it!)
+    {11,12,-13},  // Right Chassis Ports (negative port will reverse it!)
 
     21,      // IMU Port
-    4.125,   // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
-    420.0);  // Wheel RPM = cartridge * (motor gear / wheel gear)
+    3.25,   // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
+    450.0  // Wheel RPM = cartridge * (motor gear / wheel gear)
 
 // Uncomment the trackers you're using here!
 // - `8` and `9` are smart ports (making these negative will reverse the sensor)
@@ -22,7 +27,7 @@ ez::Drive chassis(
 // - `4.0` is the distance from the center of the wheel to the center of the robot
 // ez::tracking_wheel horiz_tracker(8, 2.75, 4.0);  // This tracking wheel is perpendicular to the drive wheels
 // ez::tracking_wheel vert_tracker(9, 2.75, 4.0);   // This tracking wheel is parallel to the drive wheels
-
+);
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -32,7 +37,13 @@ ez::Drive chassis(
 void initialize() {
   // Print our branding over your terminal :D
   ez::ez_template_print();
-
+  rotate_sens.set_position(0);
+  pros::Task lift_control_task([]{
+    while (true) {
+      lift_control();
+      pros::delay(10);
+    }
+  });
   pros::delay(500);  // Stop the user from doing anything while legacy ports configure
 
   // Look at your horizontal tracking wheel and decide if it's in front of the midline of your robot or behind it
@@ -49,6 +60,7 @@ void initialize() {
   chassis.opcontrol_drive_activebrake_set(0.0);   // Sets the active brake kP. We recommend ~2.  0 will disable.
   chassis.opcontrol_curve_default_set(0.0, 0.0);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
 
+
   // Set the drive to your own constants from autons.cpp!
   default_constants();
 
@@ -58,20 +70,11 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"Drive\n\nDrive forward and come back", drive_example},
-      {"Turn\n\nTurn 3 times.", turn_example},
-      {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
-      {"Drive and Turn\n\nSlow down during drive", wait_until_change_speed},
-      {"Swing Turn\n\nSwing in an 'S' curve", swing_example},
-      {"Motion Chaining\n\nDrive forward, turn, and come back, but blend everything together :D", motion_chaining},
-      {"Combine all 3 movements", combining_movements},
-      {"Interference\n\nAfter driving forward, robot performs differently if interfered or not", interfered_example},
-      {"Simple Odom\n\nThis is the same as the drive example, but it uses odom instead!", odom_drive_example},
-      {"Pure Pursuit\n\nGo to (0, 30) and pass through (6, 10) on the way.  Come back to (0, 0)", odom_pure_pursuit_example},
-      {"Pure Pursuit Wait Until\n\nGo to (24, 24) but start running an intake once the robot passes (12, 24)", odom_pure_pursuit_wait_until_example},
-      {"Boomerang\n\nGo to (0, 24, 45) then come back to (0, 0, 0)", odom_boomerang_example},
-      {"Boomerang Pure Pursuit\n\nGo to (0, 24, 45) on the way to (24, 24) then come back to (0, 0, 0)", odom_boomerang_injected_pure_pursuit_example},
-      {"Measure Offsets\n\nThis will turn the robot a bunch of times and calculate your offsets for your tracking wheels.", measure_offsets},
+      {"blue left", highstakes_blue_left},
+      {"blue right", highstakes_blue_right},
+      {"red left", highstakes_red_left},
+      {"red right", highstakes_red_right},
+      {"skills", skills},
   });
 
   // Initialize chassis and auton selector
@@ -247,8 +250,8 @@ void opcontrol() {
     // Gives you some extras to make EZ-Template ezier
     ez_template_extras();
 
-    chassis.opcontrol_tank();  // Tank control
-    // chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    // chassis.opcontrol_tank();  // Tank control
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
     // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
@@ -256,7 +259,24 @@ void opcontrol() {
     // . . .
     // Put more user control code here!
     // . . .
-
+    if (master.get_digital(DIGITAL_L1)) {
+      intake.move(127);
+    } 
+    else if (master.get_digital(DIGITAL_L2)) {
+      intake.move(-127);
+    } 
+    else {
+      intake.move(0);
+    }
+    if (master.get_digital_new_press(DIGITAL_R1)) {
+      up_state();
+    }
+    else if (master.get_digital_new_press(DIGITAL_R2)) {
+      down_state();
+    }
+    mogo.button_toggle(master.get_digital(DIGITAL_A));
+    doinker.button_toggle(master.get_digital(DIGITAL_B));
+    intake_elev.button_toggle(master.get_digital(DIGITAL_DOWN));
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }
